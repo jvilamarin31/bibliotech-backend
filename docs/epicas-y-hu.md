@@ -219,10 +219,10 @@ Para auditar datos (Admin) o para que un cliente verifique su propio perfil.
 | [Épica 1: Autenticación y Gestión de Usuarios](#épica-1-autenticación-y-gestión-de-usuarios) | Administrador (Empleado) / Cliente (Afiliado/Invitado) |
 
 **Historia**
-Como usuario autenticado, quiero actualizar los datos de un usuario, para corregir información.
+Como Administrador, quiero actualizar los datos de cualquier usuario para mantener la información del personal actualizada. Como Cliente, quiero actualizar mis propios datos personales para corregir mi información sin depender de un administrador.
 
 **¿Por qué existe?**
-Para mantener la información actualizada.
+Para garantizar la mantenibilidad de los datos (Admin) y empoderar al usuario sobre su propia información (Cliente), aplicando restricciones de seguridad estrictas para evitar la escalada de privilegios.
 
 **Prioridad MoSCoW**
 - [x] **Must**
@@ -231,11 +231,12 @@ Para mantener la información actualizada.
 - [ ] Won't
 
 **Criterios de Aceptación**
-- Dado que el administrador actualiza cualquier ID existente, entonces el sistema responde con HTTP 200.
-- Dado que un Cliente actualiza su propio ID, entonces el sistema responde con HTTP 200.
+- Dado que el administrador actualiza cualquier usuario por ID existente, entonces el sistema responde con HTTP 200 y permite actualizar cualquier campo (incluido el `tipoUsuario`).
+- Dado que un Cliente actualiza su propio ID enviando datos válidos, entonces el sistema responde con HTTP 200 y actualiza solo sus datos personales (nombre, usuario y clave).
 - Dado que un Cliente intenta actualizar a otro usuario, entonces el sistema responde con HTTP 403 (Forbidden).
-- Dado que el ID no existe, entonces el sistema responde con HTTP 404.
-- Dado que no se envía un token válido, entonces el sistema responde con estado HTTP 401.
+- Dado que un Cliente intenta modificar un atributo restringido (como `tipoUsuario`) en su propio perfil, entonces el sistema responde con HTTP 403 (Forbidden) indicando que no tiene permisos para modificar ese campo.
+- Dado que el ID no existe, entonces el sistema responde con HTTP 404 (Not Found).
+- Dado que no se envía un token válido, entonces el sistema responde con HTTP 401 (Unauthorized).
 
 ### HU-006: Eliminar usuario
 
@@ -244,10 +245,10 @@ Para mantener la información actualizada.
 | [Épica 1: Autenticación y Gestión de Usuarios](#épica-1-autenticación-y-gestión-de-usuarios) | Administrador (Empleado) / Cliente (Afiliado/Invitado) |
 
 **Historia**
-Como usuario autenticado, quiero eliminar un usuario del sistema, para revocar su acceso.
+Como Administrador, quiero eliminar a cualquier usuario del sistema para revocar su acceso a la plataforma. Como Cliente, quiero eliminar mi propia cuenta para darme de baja del servicio.
 
 **¿Por qué existe?**
-Para dar de baja a personal o permitir que un cliente cierre su cuenta.
+Para gestionar la baja de cuentas en la plataforma, permitiendo al Administrador revocar accesos y al Cliente eliminar su propia cuenta, garantizando que no modificar o borrar perfiles ajenos.
 
 **Prioridad MoSCoW**
 - [x] **Must**
