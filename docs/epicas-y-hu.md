@@ -194,10 +194,10 @@ Para facilitar la gestión y auditoría de accesos a la plataforma.
 | [Épica 1: Autenticación y Gestión de Usuarios](#épica-1-autenticación-y-gestión-de-usuarios) | Administrador (Empleado) / Cliente (Afiliado/Invitado) |
 
 **Historia**
-Como usuario autenticado, quiero consultar los datos de un usuario específico por su ID, para revisar su información.
+Como Administrador, quiero consultar los datos de cualquier usuario por su ID para auditar su información y validar su estado en la plataforma. Como Cliente, quiero consultar mis propios datos por mi ID para verificar mi información personal sin poder acceder a la de otros.
 
 **¿Por qué existe?**
-Para auditar datos (Admin) o para que un cliente verifique su propio perfil.
+Para garantizar la transparencia y auditoría por parte del personal autorizado (Admin), y para empoderar al cliente permitiéndole verificar su propio perfil de forma segura, respetando estrictamente la privacidad y evitando fugas de datos (IDOR).
 
 **Prioridad MoSCoW**
 - [x] **Must**
