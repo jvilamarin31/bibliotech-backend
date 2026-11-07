@@ -1,0 +1,1319 @@
+{
+  "info": {
+    "_postman_id": "8dfb2d5f-c0d5-467c-b39a-be9ca996229f",
+    "name": "BIBLIOTECH-API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "54209461"
+  },
+  "item": [
+    {
+      "name": "01 - Auth",
+      "item": [
+        {
+          "name": "Login Admin (200 OK)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {\n    const responseData = pm.response.json();\n    \n    if (responseData.token) {\n        pm.collectionVariables.set(\"jwt_token_admin\", responseData.token);\n        console.log(\"Token JWT guardado exitosamente en 'jwt_token_admin'\");\n    }\n}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"usuario\": \"admin\",\n    \"clave\": \"admin123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/auth/login",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Inicia sesión en el sistema con credenciales de Administrador y devuelve un token JWT para acceder a los endpoints protegidos.\n\n### Autenticación\n\nPúblico (no requiere token).\n\n### Body (JSON)\n\n| **Campo** | **Tipo** | **Obligatorio** | **Validación** |\n| --- | --- | --- | --- |\n| `usuario` | string | Sí | Nombre de usuario registrado. |\n| `clave` | string | Sí | Contraseña del usuario. |\n\n### Respuestas\n\n- **200 OK** → Devuelve el token JWT (`token`), el nombre, el usuario y el tipo de usuario (`tipoUsuario`).\n    \n- **401 Unauthorized** → Credenciales incorrectas (usuario o clave inválidos).\n    \n- **400 Bad Request** → Validación fallida (campos vacíos o nulos en el JSON).\n    \n\n### Ejemplo Request\n\n``` json\n{\n  \"usuario\": \"admin\",\n  \"clave\": \"admin123\"\n}\n\n ```\n\n### Script de Prueba (Post-response)\n\nGuarda el token automáticamente en la variable de colección `jwt_token_admin` para ser usado en los endpoints protegidos.\n\n``` javascript\nif (pm.response.code === 200) {\n    const responseData = pm.response.json();\n    if (responseData.token) {\n        pm.collectionVariables.set(\"jwt_token_admin\", responseData.token);\n        console.log(\"Token JWT guardado exitosamente en 'jwt_token_admin'\");\n    }\n}\n\n ```"
+          },
+          "response": []
+        },
+        {
+          "name": "Login Cliente (200 OK)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {\n    const responseData = pm.response.json();\n    \n    if (responseData.token) {\n        pm.collectionVariables.set(\"jwt_token_cliente\", responseData.token);\n        console.log(\"Token JWT guardado exitosamente en 'jwt_token_cliente'\");\n    }\n}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuario\": \"juan\",\n  \"clave\": \"clave123\"\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/auth/login",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Caso de prueba: Inicio de sesión exitoso con credenciales de un usuario Cliente (Afiliado o Invitado).\n\n### Propósito\n\nA diferencia del login de administrador, este request sirve para obtener un token con el rol `ROLE_USER`. Este token es útil para probar las restricciones de seguridad (RBAC) en los demás endpoints, demostrando que un cliente recibe un HTTP 403 al intentar acceder a rutas administrativas (como crear usuarios o libros).\n\n### Contrato de la API\n\nEl esquema del JSON de entrada y salida es exactamente el mismo que el del Login Admin. Para ver la tabla completa de validaciones y respuestas, revisa la documentación del endpoint `POST Login Admin`.\n\n### Ejemplo Request\n\n``` json\n{\n  \"usuario\": \"juan\",\n  \"clave\": \"clave123\"\n}\n\n ```\n\n### Script de Prueba (Post-response)\n\nGuarda el token del cliente en una variable diferente (`jwt_token_cliente`) para que no sobrescriba el token del administrador y puedas hacer pruebas alternas.\n\n``` javascript\nif (pm.response.code === 200) {\n    const responseData = pm.response.json();\n    if (responseData.token) {\n        pm.collectionVariables.set(\"jwt_token_cliente\", responseData.token);\n        console.log(\"Token de Cliente guardado exitosamente en 'jwt_token_cliente'\");\n    }\n}\n\n ```"
+          },
+          "response": []
+        },
+        {
+          "name": "Login Credenciales Invalidas",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"usuario\": \"admin\",\n    \"clave\": \"admin123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/auth/login",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Caso de prueba: Intento de inicio de sesión con una contraseña incorrecta.\n\n**Propósito**  \nVerificar que el sistema maneje correctamente los errores de autenticación, denegando el acceso y devolviendo un mensaje de error claro sin revelar si el usuario existe o no.\n\n**Respuestas**\n\n- **401 Unauthorized** → Devuelve un JSON estandarizado con el mensaje \"Credenciales incorrectas\".\n    \n\n**Ejemplo Request**\n\n``` json\n{\n  \"usuario\": \"admin\",\n  \"clave\": \"clave_incorrecta_123\"\n}\n\n ```"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "02 - Users",
+      "item": [
+        {
+          "name": "Administrador (Requiere Token Admin)",
+          "item": [
+            {
+              "name": "Crear Usuario (201)",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombre\": \"Juan Vila\",\n  \"identificacion\": \"123456789\",\n  \"tipoUsuario\": 1,\n  \"usuario\": \"juan\",\n  \"clave\": \"clave123\"\n}\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:8080/usuarios",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "usuarios"
+                  ]
+                },
+                "description": "Crea un nuevo usuario en el sistema. Solo accesible para Administradores.\n\n**Autenticación**  \nRequiere Bearer Token (`{{jwt_token_admin}}`).\n\n**Body (JSON)**\n\n| Campo | Tipo | Obligatorio | Validación |\n| --- | --- | --- | --- |\n| `nombre` | string | Sí | Máx 100 caracteres. |\n| `identificacion` | string | Sí | Único, máx 50 caracteres. |\n| `tipoUsuario` | integer | Sí | 1 (Afiliado), 2 (Empleado) o 3 (Invitado). |\n| `usuario` | string | Sí | Único, máx 50 caracteres. |\n| `clave` | string | Sí | Máx 70 caracteres. |\n\n**Respuestas**\n\n- **201 Created** → Devuelve los datos del usuario creado (sin la clave).\n    \n- **400 Bad Request** → Error de validación en los datos.\n    \n- **403 Forbidden** → Un cliente intenta usar este endpoint.\n    \n- **409 Conflict** → El usuario o la identificación ya existen.\n    \n\n**Ejemplo Request**\n\n``` json\n{\n  \"nombre\": \"Juan Vila\",\n  \"identificacion\": \"123456789\",\n  \"tipoUsuario\": 1,\n  \"usuario\": \"juan\",\n  \"clave\": \"clave123\"\n}\n\n ```"
+              },
+              "response": []
+            },
+            {
+              "name": "Listar Usuarios (200)",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/usuarios",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "usuarios"
+                  ]
+                },
+                "description": "Obtiene el listado de todos los usuarios registrados en el sistema.\n\n**Autenticación**  \nRequiere Bearer Token de Administrador (`{{jwt_token_admin}}`).\n\n**Respuestas**\n\n- **200 OK** → Devuelve un arreglo JSON con todos los usuarios (sin contraseñas).\n    \n- **200 OK (Arreglo vacío)** → Si no hay usuarios (poco probable, ya que el admin siempre existe).\n    \n- **403 Forbidden** → Si un Cliente intenta acceder a este endpoint.\n    \n- **401 Unauthorized** → Si no se envía token o es inválido."
+              },
+              "response": []
+            },
+            {
+              "name": "Usuario por ID (200)",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/usuarios/:id",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "usuarios",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": ""
+                    }
+                  ]
+                },
+                "description": "Consulta los detalles de un usuario específico utilizando su ID.\n\n**Autenticación**  \nRequiere Bearer Token de Administrador (`{{jwt_token_admin}}`).\n\n**Parámetros de Ruta (Path Variables)**\n\n- `id` (integer): ID único del usuario a consultar.\n    \n\n**Respuestas**\n\n- **200 OK** → Devuelve los datos del usuario (`nombre`, `identificacion`, `tipoUsuario`, `usuario`).\n    \n- **404 Not Found** → Si el ID no existe en la base de datos.\n    \n- **403 Forbidden** → Si un Cliente intenta consultar el ID de otro usuario."
+              },
+              "response": []
+            },
+            {
+              "name": "Actualizar Usuario (200)",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"tipoUsuario\": 2\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:8080/usuarios/:id",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "usuarios",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": ""
+                    }
+                  ]
+                },
+                "description": "Actualiza parcialmente los datos de un usuario existente.\n\n**Autenticación**  \nRequiere Bearer Token de Administrador (`{{jwt_token_admin}}`).\n\n**Body (JSON) - Todos los campos son opcionales**\n\n| Campo | Tipo | Validación |\n| --- | --- | --- |\n| `nombre` | string | Máx 100 caracteres. |\n| `identificacion` | string | Máx 50 caracteres, debe ser único. |\n| `tipoUsuario` | integer | 1, 2 o 3. |\n| `usuario` | string | Máx 50 caracteres, debe ser único. |\n| `clave` | string | Máx 70 caracteres. |\n\n**Respuestas**\n\n- **200 OK** → Devuelve el usuario actualizado.\n    \n- **404 Not Found** → El ID no existe.\n    \n- **409 Conflict** → El nuevo usuario o identificación ya están en uso por otro usuario.\n    \n\n**Ejemplo Request (Promover a alguien a Admin)**\n\n``` json\n{\n  \"tipoUsuario\": 2\n}\n\n ```"
+              },
+              "response": []
+            },
+            {
+              "name": "Eliminar Usuario (204)",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/usuarios/:id",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "usuarios",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": ""
+                    }
+                  ]
+                },
+                "description": "Elimina a un usuario del sistema (Solo Administrador).\n\n**Autenticación**  \nRequiere Bearer Token de Administrador (`{{jwt_token_admin}}`).\n\n**Respuestas**\n\n- **204 No Content** → Usuario eliminado exitosamente (no devuelve body).\n    \n- **404 Not Found** → El ID no existe."
+              },
+              "response": []
+            }
+          ],
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{jwt_token_admin}}",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Cliente (Requiere Token Cliente)",
+          "item": [
+            {
+              "name": "Consultar Mi Perfil (200)",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/usuarios/:id",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "usuarios",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": ""
+                    }
+                  ]
+                },
+                "description": "Caso de prueba: Un cliente consulta sus propios datos.\n\n**Propósito**  \nVerificar que un Cliente (`ROLE_USER`) puede ver su propia información usando su propio ID.\n\n**Autenticación**  \nRequiere Bearer Token de Cliente (`{{jwt_token_cliente}}`).\n\n**Respuestas**\n\n- **200 OK** → Devuelve los datos del cliente autenticado.\n    \n- **403 Forbidden** → Si el cliente intenta cambiar el ID en la URL por el de otro usuario."
+              },
+              "response": []
+            },
+            {
+              "name": "Actualizar Mi Perfil (200)",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombre\": \"Juan Actualizado\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:8080/usuarios/:id",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "usuarios",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "2"
+                    }
+                  ]
+                },
+                "description": "Caso de prueba: Un Cliente actualiza su propio perfil.\n\n**Propósito**  \nDemostrar que un usuario con rol `ROLE_USER` puede usar el método PUT para actualizar parcialmente sus datos, pero el sistema ignora o bloquea cualquier intento de modificar su `tipoUsuario`.\n\n**Autenticación**  \nRequiere Bearer Token de Cliente (`{{jwt_token_cliente}}`).\n\n**Ejemplo Request**\n\n``` json\n{\n  \"nombre\": \"Juan Actualizado\"\n}\n\n ```"
+              },
+              "response": []
+            },
+            {
+              "name": "Eliminar Mi Perfil (204)",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/usuarios/:id",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "usuarios",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": ""
+                    }
+                  ]
+                },
+                "description": "Caso de prueba: Un cliente se elimina a sí mismo de la plataforma.\n\n**Propósito**  \nVerificar que un Cliente (`ROLE_USER`) puede darse de baja voluntariamente eliminando su propio perfil. También valida que el sistema le impida eliminar a otros usuarios (HTTP 403).\n\n**Autenticación**  \nRequiere Bearer Token de Cliente (`{{jwt_token_client}}`).\n\n**Parámetros de Ruta (Path Variables)**\n\n- `id` (integer): ID único del cliente autenticado.\n    \n\n**Respuestas**\n\n- **204 No Content** → El usuario fue eliminado correctamente (no devuelve body).\n    \n- **403 Forbidden** → Si el cliente intenta cambiar el ID en la URL por el de otro usuario (Prevención de IDOR).\n    \n- **404 Not Found** → Si el ID ya no existe en la base de datos.\n    \n\n**Ejemplo de URL**  \n`DELETE http://localhost:8080/usuarios/{{cliente_id}}`  \n_(Nota: Puedes guardar el ID en una variable de Postman al crear el usuario para usarlo aquí)._"
+              },
+              "response": []
+            }
+          ],
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{jwt_token_cliente}}",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Validaciones y Seguridad (Errores)",
+          "item": [
+            {
+              "name": "Crear Usuario Duplicado (409)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token_admin}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombre\": \"Copia de Admin\",\n  \"identificacion\": \"1001\", \n  \"tipoUsuario\": 1,\n  \"usuario\": \"admin\",\n  \"clave\": \"admin123\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:8080/usuarios",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "usuarios"
+                  ]
+                },
+                "description": "Caso de prueba: Intento de crear un usuario con un `username` o `identificacion` que ya existen.\n\n**Autenticación**  \nRequiere Bearer Token (`{{jwt_token_admin}}`).\n\n**Respuestas**\n\n- **409 Conflict** → El sistema rechaza la creación porque viola la restricción UNIQUE de la base de datos.\n    \n\n**Ejemplo Request**\n\n``` json\n{\n  \"nombre\": \"Copia de Admin\",\n  \"identificacion\": \"1001\", \n  \"tipoUsuario\": 1,\n  \"usuario\": \"admin\",\n  \"clave\": \"admin123\"\n}\n\n ```"
+              },
+              "response": []
+            },
+            {
+              "name": "Crear Usuario con Rol Inválido (400)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token_admin}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombre\": \"Usuario Invalido\",\n  \"identificacion\": \"9999\",\n  \"tipoUsuario\": 5,\n  \"usuario\": \"invalido\",\n  \"clave\": \"clave123\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:8080/usuarios",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "usuarios"
+                  ]
+                },
+                "description": "Caso de prueba: Intento de crear un usuario con un `tipoUsuario` fuera del rango permitido (1, 2 o 3).\n\n**Autenticación**  \nRequiere Bearer Token (`{{jwt_token_admin}}`).\n\n**Respuestas**\n\n- **400 Bad Request** → El sistema rechaza la petición por fallar las validaciones de Jakarta (@Min y @Max).\n    \n\n**Ejemplo Request**\n\n``` json\n{\n  \"nombre\": \"Usuario Invalido\",\n  \"identificacion\": \"9999\",\n  \"tipoUsuario\": 5,\n  \"usuario\": \"invalido\",\n  \"clave\": \"clave123\"\n}\n\n ```"
+              },
+              "response": []
+            },
+            {
+              "name": "Cliente intenta Crear o Listar (403)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token_cliente}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombre\": \"Prueba de creación\",\n  \"identificacion\": \"00000001\",\n  \"tipoUsuario\": 1,\n  \"usuario\": \"Prueba\",\n  \"clave\": \"clave123\"\n}\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:8080/usuarios",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "usuarios"
+                  ]
+                },
+                "description": "Caso de prueba de seguridad (RBAC): Un Cliente intenta acceder a endpoints de administración.\n\n**Propósito**  \nVerificar que Spring Security bloquea el acceso a la gestión de usuarios para los roles `ROLE_USER`.\n\n**Autenticación**  \nRequiere Bearer Token de Cliente (`{{jwt_token_cliente}}`).\n\n**Endpoints a probar:**\n\n- `POST /usuarios` (Crear)\n    \n- `GET /usuarios` (Listar)\n    \n\n**Respuestas**\n\n- **403 Forbidden** → El sistema deniega el acceso."
+              },
+              "response": []
+            },
+            {
+              "name": "Cliente intenta Modificar/Eliminar a Otro (403)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token_cliente}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/usuarios/:id",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "usuarios",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "1"
+                    }
+                  ]
+                },
+                "description": "Caso de prueba de seguridad (IDOR): Un Cliente intenta modificar o eliminar el perfil de otro usuario manipulando el ID en la URL.\n\n**Propósito**  \nVerificar la \"Defensa en profundidad\". Aunque el `@PreAuthorize` del controlador bloquea esto, el `UserService` también valida que el ID coincida con el usuario autenticado.\n\n**Autenticación**  \nRequiere Bearer Token de Cliente (`{{jwt_token_cliente}}`).\n\n**Respuestas**\n\n- **403 Forbidden** → El sistema lanza `ForbiddenActionException`."
+              },
+              "response": []
+            },
+            {
+              "name": "GET/PATCH/DELETE Usuario Inexistente (404)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token_admin}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/usuarios/:id",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "usuarios",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "999"
+                    }
+                  ]
+                },
+                "description": "Caso de prueba: Operaciones sobre un ID que no existe.\n\n**Autenticación**  \nRequiere Bearer Token (`{{jwt_token_admin}}`).\n\n**Respuestas**\n\n- **404 Not Found** → Devuelve un mensaje claro: \"El usuario con id: X no existe\".\n    \n\n**Instrucciones:**  \nPrueba con un ID alto (ej. `/usuarios/9999`)."
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "03 - Books",
+      "item": [
+        {
+          "name": "Administrador (Requiere Token Admin)",
+          "item": [
+            {
+              "name": "Crear Libro (201)",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"isbn\": \"978-3-16-148410-0\",\n  \"titulo\": \"Cien Años de Soledad\",\n  \"autor\": \"Gabriel García Márquez\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:8080/libros",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "libros"
+                  ]
+                },
+                "description": "Crea un nuevo libro en el catálogo. Solo accesible para Administradores.\n\n**Autenticación**  \nRequiere Bearer Token (`{{jwt_token_admin}}`).\n\n**Body (JSON)**\n\n| Campo | Tipo | Obligatorio | Validación |\n| --- | --- | --- | --- |\n| `isbn` | string | Sí | Único, máx 50 caracteres. |\n| `titulo` | string | Sí | Máx 150 caracteres. |\n| `autor` | string | Sí | Máx 100 caracteres. |\n\n**Respuestas**\n\n- **201 Created** → Devuelve los datos del libro creado (con `disponible: true` por defecto).\n    \n- **400 Bad Request** → Error de validación en los datos.\n    \n- **409 Conflict** → El ISBN ya existe.\n    \n- **403 Forbidden** → Un cliente intenta usar este endpoint.\n    \n\n**Ejemplo Request**\n\n``` json\n{\n  \"isbn\": \"978-3-16-148410-0\",\n  \"titulo\": \"Cien Años de Soledad\",\n  \"autor\": \"Gabriel García Márquez\"\n}\n\n ```"
+              },
+              "response": []
+            },
+            {
+              "name": "Listar Libros (200)",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/libros",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "libros"
+                  ]
+                },
+                "description": "Obtiene el listado de todos los libros registrados en el sistema (disponibles y no disponibles).\n\n**Autenticación**  \nRequiere Bearer Token de Administrador (`{{jwt_token_admin}}`).\n\n**Respuestas**\n\n- **200 OK** → Devuelve un arreglo JSON con todos los libros.\n    \n- **200 OK (Arreglo vacío)** → Si no hay libros registrados.\n    \n- **403 Forbidden** → Si un Cliente intenta acceder."
+              },
+              "response": []
+            },
+            {
+              "name": "Consultar Libro por ISBN (200)",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/libros/:isbn",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "libros",
+                    ":isbn"
+                  ],
+                  "variable": [
+                    {
+                      "key": "isbn",
+                      "value": "978-3-16-148410-0"
+                    }
+                  ]
+                },
+                "description": "Consulta los detalles de un libro específico utilizando su ISBN.\n\n**Autenticación**  \nRequiere Bearer Token de Administrador (`{{jwt_token_admin}}`).\n\n**Parámetros de Ruta (Path Variables)**\n\n- `isbn` (string): ISBN único del libro a consultar.\n    \n\n**Respuestas**\n\n- **200 OK** → Devuelve los datos del libro.\n    \n- **404 Not Found** → Si el ISBN no existe en el catálogo."
+              },
+              "response": []
+            },
+            {
+              "name": "Actualizar Libro (200)",
+              "request": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"titulo\": \"Cien Años de Soledad (Edición Especial)\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:8080/libros/:isbn",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "libros",
+                    ":isbn"
+                  ],
+                  "variable": [
+                    {
+                      "key": "isbn",
+                      "value": "978-3-16-148410-0"
+                    }
+                  ]
+                },
+                "description": "Actualiza parcialmente los datos de un libro existente.\n\n**Autenticación**  \nRequiere Bearer Token de Administrador (`{{jwt_token_admin}}`).\n\n**Body (JSON) - Todos los campos son opcionales**\n\n| Campo | Tipo | Validación |\n| --- | --- | --- |\n| `isbn` | string | Máx 50 caracteres, debe ser único. |\n| `titulo` | string | Máx 150 caracteres. |\n| `autor` | string | Máx 100 caracteres. |\n| `disponible` | boolean | true o false. |\n\n**Respuestas**\n\n- **200 OK** → Devuelve el libro actualizado.\n    \n- **404 Not Found** → El ISBN no existe.\n    \n- **409 Conflict** → Si intentas cambiar el ISBN a uno que ya está en uso.\n    \n\n**Ejemplo Request (Actualización parcial)**\n\n``` json\n{\n  \"titulo\": \"Cien Años de Soledad (Edición Especial)\"\n}\n\n ```"
+              },
+              "response": []
+            },
+            {
+              "name": "Eliminar Libro (204)",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/libros/:isbn",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "libros",
+                    ":isbn"
+                  ],
+                  "variable": [
+                    {
+                      "key": "isbn",
+                      "value": "978-3-16-148410-0"
+                    }
+                  ]
+                },
+                "description": "Elimina un libro del catálogo.\n\n**Autenticación**  \nRequiere Bearer Token de Administrador (`{{jwt_token_admin}}`).\n\n**Respuestas**\n\n- **204 No Content** → Libro eliminado exitosamente (no devuelve body).\n    \n- **404 Not Found** → El ISBN no existe."
+              },
+              "response": []
+            }
+          ],
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{jwt_token_admin}}",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Validaciones y Seguridad (Errores)",
+          "item": [
+            {
+              "name": "Crear Libro Duplicado (409)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token_admin}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"isbn\": \"978-3-16-148410-0\",\n  \"titulo\": \"Copia Ilegal\",\n  \"autor\": \"Desconocido\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:8080/libros",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "libros"
+                  ]
+                },
+                "description": "Caso de prueba: Intento de crear un libro con un ISBN que ya existe en el catálogo.\n\n**Autenticación**  \nRequiere Bearer Token (`{{jwt_token_admin}}`).\n\n**Respuestas**\n\n- **409 Conflict** → El sistema rechaza la creación por violar la restricción UNIQUE.\n    \n\n**Ejemplo Request**\n\n``` json\n{\n  \"isbn\": \"978-3-16-148410-0\",\n  \"titulo\": \"Copia Ilegal\",\n  \"autor\": \"Desconocido\"\n}\n\n ```"
+              },
+              "response": []
+            },
+            {
+              "name": "Crear Libro Inválido (400)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token_admin}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"isbn\": \"\",\n  \"titulo\": \"Libro sin autor\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:8080/libros",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "libros"
+                  ]
+                },
+                "description": "Caso de prueba: Intento de crear un libro sin los campos obligatorios.\n\n**Autenticación**  \nRequiere Bearer Token (`{{jwt_token_admin}}`).\n\n**Respuestas**\n\n- **400 Bad Request** → El sistema rechaza la petición por fallar las validaciones de Jakarta (@NotBlank, @Size).\n    \n\n**Ejemplo Request**\n\n``` json\n{\n  \"isbn\": \"\",\n  \"titulo\": \"Libro sin autor\"\n}\n\n ```"
+              },
+              "response": []
+            },
+            {
+              "name": "GET/PATCH/DELETE Libro Inexistente (404)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token_admin}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/libros/:isbn",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "libros",
+                    ":isbn"
+                  ],
+                  "variable": [
+                    {
+                      "key": "isbn",
+                      "value": "000-000-000"
+                    }
+                  ]
+                },
+                "description": "Caso de prueba: Operaciones sobre un ISBN que no existe.\n\n**Autenticación**  \nRequiere Bearer Token (`{{jwt_token_admin}}`).\n\n**Respuestas**\n\n- **404 Not Found** → Devuelve un mensaje claro: \"El libro con ISBN: X no existe\".\n    \n\n**Instrucciones:**  \nPrueba con un ISBN inventado (ej. `/libros/000-000-000`)."
+              },
+              "response": []
+            },
+            {
+              "name": "Cliente intenta Gestionar Libro (403)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token_cliente}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/libros/:isbn",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "libros",
+                    ":isbn"
+                  ],
+                  "variable": [
+                    {
+                      "key": "isbn",
+                      "value": "978-3-16-148410-0"
+                    }
+                  ]
+                },
+                "description": "Caso de prueba de seguridad (RBAC): Un Cliente intenta acceder a los endpoints del catálogo.\n\n**Propósito**  \nVerificar que el `@PreAuthorize(\"hasAuthority('ROLE_ADMIN')\")` a nivel de clase bloquea el acceso a cualquier usuario que no sea Administrador.\n\n**Autenticación**  \nRequiere Bearer Token de Cliente (`{{jwt_token_cliente}}`).\n\n**Endpoints a probar:**\n\n- `POST /libros`\n    \n- `GET /libros`\n    \n- `PATCH /libros/{isbn}`\n    \n- `DELETE /libros/{isbn}`\n    \n\n**Respuestas**\n\n- **403 Forbidden** → El sistema deniega el acceso con un mensaje JSON estandarizado."
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "04 - Loans",
+      "item": [
+        {
+          "name": "Administrador (Requiere Token Admin)",
+          "item": [
+            {
+              "name": "Crear Préstamo (201)",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"isbn\": \"978-3-16-148410-0\",\n  \"identificacionUsuario\": \"123456789\",\n  \"tipoUsuario\": 1\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:8080/prestamos",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "prestamos"
+                  ]
+                },
+                "description": "Registra el préstamo de un libro. Solo accesible para Administradores. Al crearse, el libro pasa a estar \"no disponible\".\n\n**Autenticación**  \nRequiere Bearer Token de Administrador (`{{jwt_token_admin}}`).\n\n**Body (JSON)**\n\n| Campo | Tipo | Obligatorio | Validación |\n| --- | --- | --- | --- |\n| `isbn` | string | Sí | El libro debe existir y estar disponible. |\n| `identificacionUsuario` | string | Sí | El usuario debe existir en el sistema. |\n| `tipoUsuario` | integer | Sí | 1 (Afiliado), 2 (Empleado) o 3 (Invitado). Debe coincidir con el de la BD. |\n\n**Respuestas**\n\n- **201 Created** → Devuelve el préstamo con las fechas calculadas (formato `dd/MM/yyyy`) y estado `\"ACTIVO\"`.\n    \n- **400 Bad Request** → Tipo de usuario inválido, libro no disponible, o invitado con préstamo activo.\n    \n- **404 Not Found** → El usuario o el libro no existen.\n    \n- **403 Forbidden** → Un cliente intenta usar este endpoint.\n    \n\n**Ejemplo Request**\n\n``` json\n{\n  \"isbn\": \"978-3-16-148410-0\",\n  \"identificacionUsuario\": \"123456789\",\n  \"tipoUsuario\": 1\n}\n\n ```"
+              },
+              "response": []
+            },
+            {
+              "name": "Listar Préstamos (200)",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/prestamos?identificacionUsuario",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "prestamos"
+                  ],
+                  "query": [
+                    {
+                      "key": "identificacionUsuario",
+                      "value": ""
+                    }
+                  ]
+                },
+                "description": "Obtiene el listado de todos los préstamos activos. Permite filtrar opcionalmente por identificación de usuario.\n\n**Autenticación**  \nRequiere Bearer Token de Administrador (`{{jwt_token_admin}}`).\n\n**Query Params (Opcional)**\n\n- `identificacionUsuario` (string): Para ver solo los préstamos de un usuario específico.\n    \n\n**Respuestas**\n\n- **200 OK** → Arreglo con todos los préstamos activos (o filtrados).\n    \n- **200 OK (Arreglo vacío)** → Si no hay préstamos activos.\n    \n\n**Ejemplos de URL**\n\n- `GET /prestamos` (Todos)\n    \n- `GET /prestamos?identificacionUsuario=123456789` (Filtrado)"
+              },
+              "response": []
+            },
+            {
+              "name": "Consultar Préstamo por ID (200)",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/prestamos/:id",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "prestamos",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": ""
+                    }
+                  ]
+                },
+                "description": "Consulta los detalles de un préstamo específico por su ID.\n\n**Autenticación**  \nRequiere Bearer Token de Administrador (`{{jwt_token_admin}}`).\n\n**Parámetros de Ruta**\n\n- `id` (integer): ID único del préstamo.\n    \n\n**Respuestas**\n\n- **200 OK** → Devuelve los datos completos del préstamo.\n    \n- **404 Not Found** → Si el ID no existe."
+              },
+              "response": []
+            }
+          ],
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{jwt_token_admin}}",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Flujo Cliente (Requiere Token Cliente)",
+          "item": [
+            {
+              "name": "Listar Mis Préstamos (200)",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/prestamos?identificacionUsuario=",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "prestamos"
+                  ],
+                  "query": [
+                    {
+                      "key": "identificacionUsuario",
+                      "value": ""
+                    }
+                  ]
+                },
+                "description": "Caso de prueba: Un cliente consulta su propio historial de préstamos.\n\n**Propósito**  \nVerificar que el cliente solo puede ver sus propios préstamos. El sistema fuerza internamente el filtro por su identificación.\n\n**Autenticación**  \nRequiere Bearer Token de Cliente (`{{jwt_token_cliente}}`).\n\n**Respuestas**\n\n- **200 OK** → Arreglo con los préstamos activos del cliente logueado.\n    \n- **403 Forbidden** → Si el cliente intenta enviar el filtro `identificacionUsuario` con una cédula ajena.\n    \n\n**Ejemplo de URL correcta**  \n`GET /prestamos?identificacionUsuario={{identificacion_cliente}}`"
+              },
+              "response": []
+            },
+            {
+              "name": "Consultar Mi Préstamo por ID (200)",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/prestamos/:id",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "prestamos",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": ""
+                    }
+                  ]
+                },
+                "description": "Caso de prueba: Un cliente consulta un préstamo específico que le pertenece.\n\n**Autenticación**  \nRequiere Bearer Token de Cliente (`{{jwt_token_cliente}}`).\n\n**Respuestas**\n\n- **200 OK** → Devuelve los datos del préstamo si el ID le pertenece al cliente.\n    \n- **403 Forbidden** → Si el préstamo pertenece a otro usuario."
+              },
+              "response": []
+            }
+          ],
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{jwt_token_cliente}}",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Validaciones y Seguridad (Errores)",
+          "item": [
+            {
+              "name": "Crear - Tipo Usuario Inválido (400)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token_admin}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"isbn\": \"978-3-16-148410-0\",\n  \"identificacionUsuario\": \"123456789\",\n  \"tipoUsuario\": 5\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:8080/prestamos",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "prestamos"
+                  ]
+                },
+                "description": "Caso de prueba: Intento de crear un préstamo con un `tipoUsuario` fuera del rango (ej. 5).\n\n**Autenticación**  \nRequiere Bearer Token de Administrador (`{{jwt_token_admin}}`).\n\n**Respuestas**\n\n- **400 Bad Request** → Mensaje exacto: `{\"mensaje\": \"Tipo de usuario no permitido en la biblioteca\"}` (o validación de @Min/@Max).\n    \n\n**Ejemplo Request**\n\n``` json\n{\n  \"isbn\": \"978-3-16-148410-0\",\n  \"identificacionUsuario\": \"123456789\",\n  \"tipoUsuario\": 5\n}\n\n ```"
+              },
+              "response": []
+            },
+            {
+              "name": "Crear - Invitado con Préstamo Activo (400)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token_admin}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"isbn\": \"978-3-16-148410-0\",\n  \"identificacionUsuario\": \"123456789\",\n  \"tipoUsuario\": 1\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:8080/prestamos",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "prestamos"
+                  ]
+                },
+                "description": "Caso de prueba: Un usuario Invitado (tipo 3) que ya tiene un libro prestado intenta pedir otro.\n\n**Autenticación**  \nRequiere Bearer Token de Administrador (`{{jwt_token_admin}}`).\n\n**Respuestas**\n\n- **400 Bad Request** → Mensaje exacto: `{\"mensaje\": \"El usuario con identificación xxxxxx ya tiene un libro prestado por lo cual no se le puede realizar otro préstamo\"}`.\n    \n\n_(Nota: Para probar esto, primero crea un préstamo exitoso para un Invitado, y luego intenta crearlo de nuevo con el mismo)._"
+              },
+              "response": []
+            },
+            {
+              "name": "Crear - Libro No Disponible (400)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token_admin}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"isbn\": \"978-3-16-148410-0\",\n  \"identificacionUsuario\": \"123456789\",\n  \"tipoUsuario\": 1\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:8080/prestamos",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "prestamos"
+                  ]
+                },
+                "description": "Caso de prueba: Intento de prestar un libro que ya está prestado (`disponible = false`).\n\n**Autenticación**  \nRequiere Bearer Token de Administrador (`{{jwt_token_admin}}`).\n\n**Respuestas**\n\n- **400 Bad Request** → Mensaje exacto: `{\"mensaje\": \"El libro no está disponible para préstamo.\"}`.\n    \n\n_(Nota: Crea un préstamo exitoso primero, y luego intenta crear otro con el mismo ISBN)._"
+              },
+              "response": []
+            },
+            {
+              "name": "Crear - Usuario/Libro Inexistente (404)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token_admin}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"isbn\": \"000-000-000\",\n  \"identificacionUsuario\": \"99999999\",\n  \"tipoUsuario\": 1\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:8080/prestamos",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "prestamos"
+                  ]
+                },
+                "description": "Caso de prueba: Intento de prestar un libro o a un usuario que no existen.\n\n**Autenticación**  \nRequiere Bearer Token de Administrador (`{{jwt_token_admin}}`).\n\n**Respuestas**\n\n- **404 Not Found** → Mensaje indicando que el libro o el usuario no existen.\n    \n\n**Ejemplo Request**\n\n``` json\n{\n  \"isbn\": \"000-000-000\",\n  \"identificacionUsuario\": \"99999999\",\n  \"tipoUsuario\": 1\n}\n\n ```"
+              },
+              "response": []
+            },
+            {
+              "name": "Crear - Cliente intenta Crear (403)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token_cliente}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"isbn\": \"000-000-000\",\n  \"identificacionUsuario\": \"99999999\",\n  \"tipoUsuario\": 1\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:8080/prestamos",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "prestamos"
+                  ]
+                },
+                "description": "Caso de prueba de seguridad (RBAC): Un Cliente intenta crear un préstamo.\n\n**Autenticación**  \nRequiere Bearer Token de Cliente (`{{jwt_token_cliente}}`).\n\n**Respuestas**\n\n- **403 Forbidden** → El sistema deniega el acceso."
+              },
+              "response": []
+            },
+            {
+              "name": "Listar - Cliente intenta ver de otro (403)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token_cliente}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/prestamos?identificacionUsuario=otra_cedula_123",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "prestamos"
+                  ],
+                  "query": [
+                    {
+                      "key": "identificacionUsuario",
+                      "value": "otra_cedula_123"
+                    }
+                  ]
+                },
+                "description": "Caso de prueba de seguridad (IDOR): Un Cliente intenta usar el filtro para ver los préstamos de otro usuario.\n\n**Autenticación**  \nRequiere Bearer Token de Cliente (`{{jwt_token_cliente}}`).\n\n**Ejemplo de URL maliciosa**  \n`GET /prestamos?identificacionUsuario=otra_cedula_123`\n\n**Respuestas**\n\n- **403 Forbidden** → Bloqueado por la anotación `@PreAuthorize` en el controlador."
+              },
+              "response": []
+            },
+            {
+              "name": "Consultar Préstamo por ID - Cliente intenta ver de otro (403)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token_cliente}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8080/prestamos/:id",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "prestamos",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": ""
+                    }
+                  ]
+                },
+                "description": "Caso de prueba de seguridad (IDOR): Un Cliente intenta consultar el ID de un préstamo que le pertenece a otra persona.\n\n**Autenticación**  \nRequiere Bearer Token de Cliente (`{{jwt_token_cliente}}`).\n\n**Respuestas**\n\n- **403 Forbidden** → Bloqueado por la validación lógica dentro de `LoanService.getLoanById()`."
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "jwt_token_admin",
+      "value": ""
+    },
+    {
+      "key": "jwt_token_cliente",
+      "value": ""
+    }
+  ]
+}
