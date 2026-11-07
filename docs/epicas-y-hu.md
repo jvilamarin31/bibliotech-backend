@@ -284,9 +284,11 @@ Es la funcionalidad central del negocio.
 - [ ] Won't
 
 **Criterios de Aceptación**
-- Dado que el bibliotecario envía datos válidos (tipoUsuario 1, 2 o 3, y en el caso del 3 sin préstamo activo), entonces el sistema crea el préstamo y responde con HTTP 201.
+- Dado que el bibliotecario envía datos válidos (tipoUsuario 1, 2 o 3, y en el caso del 3 sin préstamo activo), entonces el sistema crea el préstamo, marca el libro como no disponible (`disponible = false`) y responde con HTTP 201.
 - Dado que el `tipoUsuario` no es 1, 2 o 3, entonces el sistema responde con HTTP 400 y el mensaje exacto: `"Tipo de usuario no permitido en la biblioteca"`.
+- Dado que el `tipoUsuario` enviado en el JSON no coincide con el `tipoUsuario` registrado en la base de datos para el usuario de la `identificacionUsuario`, entonces el sistema responde con HTTP 400 indicando la inconsistencia.
 - Dado que se intenta crear un préstamo para un Invitado (tipo 3) con préstamo activo, entonces el sistema responde con HTTP 400 y el mensaje exacto: `"El usuario con identificación xxxxxx ya tiene un libro prestado por lo cual no se le puede realizar otro préstamo"`.
+- Dado que el libro ya está prestado (`disponible = false`), entonces el sistema responde con HTTP 400 indicando que el libro no está disponible.
 - Dado que un Cliente intenta crear un préstamo, entonces el sistema responde con HTTP 403 (Forbidden).
 - Dado que no se envía un token válido, entonces el sistema responde con estado HTTP 401.
 
@@ -300,7 +302,7 @@ Es la funcionalidad central del negocio.
 Como sistema, necesito calcular la fecha máxima de devolución al momento de crear un préstamo.
 
 **¿Por qué existe?**
-Para automatizar una regla de negocio crítica y omitir fines de semana.
+Para automatizar una regla de negocio crítica, garantizando plazos justos y omitiendo estrictamente los fines de semana (sábados y domingos).
 
 **Prioridad MoSCoW**
 - [x] **Must**
@@ -309,11 +311,13 @@ Para automatizar una regla de negocio crítica y omitir fines de semana.
 - [ ] Won't
 
 **Criterios de Aceptación**
-- Afiliado (tipo 1): suma 10 días hábiles a la fecha actual.
-- Empleado (tipo 2): suma 8 días hábiles a la fecha actual.
-- Invitado (tipo 3): suma 7 días hábiles a la fecha actual.
-- La fecha resultante debe formatearse como `dd/MM/yyyy`.
-- Si la fecha de inicio cae en viernes, sábado o domingo, se maneja omitiendo los fines de semana.
+- Dado un préstamo de un Afiliado (tipo 1), entonces el sistema suma 10 días hábiles a la fecha actual.
+- Dado un préstamo de un Empleado (tipo 2), entonces el sistema suma 8 días hábiles a la fecha actual.
+- Dado un préstamo de un Invitado (tipo 3), entonces el sistema suma 7 días hábiles a la fecha actual.
+- Dado cualquier cálculo, el sistema excluye estrictamente los sábados y domingos del conteo.
+- Dado que la fecha de inicio del préstamo es un día viernes, entonces el primer día hábil contado será el lunes siguiente.
+- Dado que la fecha de inicio es sábado o domingo, el primer día hábil contado será el lunes siguiente.
+- La fecha resultante debe formatearse y retornarse estrictamente como `dd/MM/yyyy`.
 
 ### HU-009: Consultar préstamo por ID
 
@@ -360,9 +364,11 @@ Para la operación diaria (Admin) o para que los clientes consulten sus propios 
 
 **Criterios de Aceptación**
 - Dado que el bibliotecario consulta el listado sin filtros, entonces el sistema responde con HTTP 200 y todos los préstamos activos.
-- Dado que el bibliotecario usa el filtro `identificacionUsuario`, entonces el sistema filtra los resultados.
-- Dado que un Cliente consulta el listado, el sistema debe **forzar** el filtro para mostrarle únicamente sus préstamos (o responder 403 si intenta ver todos).
-- Dado que no hay préstamos activos, entonces el sistema responde con HTTP 200 y un arreglo vacío.
+- Dado que el bibliotecario usa el filtro `identificacionUsuario`, entonces el sistema filtra los resultados y devuelve los préstamos de ese usuario.
+- Dado que un Cliente consulta el listado sin enviar el filtro, entonces el sistema responde con HTTP 200 y únicamente sus propios préstamos activos.
+- Dado que un Cliente envía el filtro `identificacionUsuario` con su propia identificación, entonces el sistema responde con HTTP 200 con sus préstamos.
+- Dado que un Cliente intenta usar el filtro `identificacionUsuario` con la identificación de otro usuario, entonces el sistema responde con HTTP 403 (Forbidden).
+- Dado que no hay préstamos activos, entonces el sistema responde con un arreglo vacío.
 - Dado que no se envía un token válido, entonces el sistema responde con estado HTTP 401.
 
 ---
