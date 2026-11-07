@@ -16,19 +16,19 @@ Esta sección describe las estrategias y decisiones fundamentales que dan forma 
    Entidades JPA mapeadas a un esquema relacional. Se prohíbe el uso de bases de datos en memoria o NoSQL, cumpliendo estrictamente con el requisito de la prueba técnica.
 
 4. **Contrato de API desacoplado con DTOs** 
-   Uso de `record` de Java 17 para las peticiones y respuestas, junto con Jakarta Bean Validation. Las entidades JPA nunca se exponen directamente en los controladores, evitando acoplar la base de datos con la interfaz HTTP.
+   Uso de `record` de Java para las peticiones y respuestas, junto con Jakarta Bean Validation. Las entidades JPA nunca se exponen directamente en los controladores, evitando acoplar la base de datos con la interfaz HTTP.
 
 5. **Manejo centralizado de errores** 
    Las excepciones de negocio (como tipo de usuario inválido o préstamo duplicado) se manejan de forma global mediante un `@RestControllerAdvice`. Esto garantiza que las respuestas de error sigan el formato JSON estándar y devuelvan los códigos HTTP exactos (400, 401, 404).
 
-6. **Generación de esquema con Hibernate y Bootstrap con `CommandLineRunner`** 
-   Para agilizar el desarrollo, se utilizará la generación automática de tablas de JPA/Hibernate (`ddl-auto=update`). La creación del primer usuario administrador se gestionará mediante un `CommandLineRunner` que verificará al arrancar la aplicación si el sistema está vacío y, de ser así, insertará el usuario por defecto.
+6. **Generación de esquema con Script SQL y ddl-auto=validate**
+   Para garantizar un control total sobre el modelo relacional, el esquema se define mediante un script SQL manual (database/schema.sql). Hibernate se configura con ddl-auto=validate para asegurar que las entidades JPA coincidan con la base de datos. La creación del primer usuario administrador se gestiona mediante un CommandLineRunner idempotente.
 
 7. **Aislamiento de la Lógica de Negocio** 
    Los controladores solo reciben y delegan. Toda la lógica de negocio (validación de invitados, cálculo de días hábiles omitiendo fines de semana, formato de fechas) reside exclusivamente en la capa de servicio (`@Service`).
 
-8. **Validación de Libros sin CRUD** 
-   Para respetar el modelo de dominio sin sobredimensionar el alcance, la entidad `Libro` se persistirá en la base de datos y se validará su existencia al crear un préstamo. Sin embargo, no se expondrán endpoints de creación o edición de libros; estos se cargarán inicialmente vía `CommandLineRunner` para fines de prueba.
+8. **CRUD Completo de Libros** 
+   Para dar soporte real al modelo de dominio y permitir la gestión del catálogo, se implementa un ciclo completo (Crear, Leer, Actualizar, Eliminar) para la entidad `Libro`. Esto asegura que los préstamos solo se realicen sobre libros existentes y gestionados por el Administrador, validando la unicidad del ISBN.
 
 ## Motivación
 
