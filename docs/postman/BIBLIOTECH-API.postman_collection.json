@@ -35,11 +35,10 @@
               }
             },
             "url": {
-              "raw": "localhost:8080/auth/login",
+              "raw": "{{base_url}}/auth/login",
               "host": [
-                "localhost"
+                "{{base_url}}"
               ],
-              "port": "8080",
               "path": [
                 "auth",
                 "login"
@@ -75,11 +74,10 @@
               }
             },
             "url": {
-              "raw": "localhost:8080/auth/login",
+              "raw": "{{base_url}}/auth/login",
               "host": [
-                "localhost"
+                "{{base_url}}"
               ],
-              "port": "8080",
               "path": [
                 "auth",
                 "login"
@@ -96,7 +94,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"usuario\": \"admin\",\n    \"clave\": \"admin123\"\n}",
+              "raw": "{\n  \"usuario\": \"admin\",\n  \"clave\": \"clave_incorrecta_123\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -104,11 +102,10 @@
               }
             },
             "url": {
-              "raw": "localhost:8080/auth/login",
+              "raw": "{{base_url}}/auth/login",
               "host": [
-                "localhost"
+                "{{base_url}}"
               ],
-              "port": "8080",
               "path": [
                 "auth",
                 "login"
@@ -141,11 +138,10 @@
                   }
                 },
                 "url": {
-                  "raw": "localhost:8080/usuarios",
+                  "raw": "{{base_url}}/usuarios",
                   "host": [
-                    "localhost"
+                    "{{base_url}}"
                   ],
-                  "port": "8080",
                   "path": [
                     "usuarios"
                   ]
@@ -160,11 +156,10 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "localhost:8080/usuarios",
+                  "raw": "{{base_url}}/usuarios",
                   "host": [
-                    "localhost"
+                    "{{base_url}}"
                   ],
-                  "port": "8080",
                   "path": [
                     "usuarios"
                   ]
@@ -179,11 +174,10 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "localhost:8080/usuarios/:id",
+                  "raw": "{{base_url}}/usuarios/:id",
                   "host": [
-                    "localhost"
+                    "{{base_url}}"
                   ],
-                  "port": "8080",
                   "path": [
                     "usuarios",
                     ":id"
@@ -214,11 +208,10 @@
                   }
                 },
                 "url": {
-                  "raw": "localhost:8080/usuarios/:id",
+                  "raw": "{{base_url}}/usuarios/:id",
                   "host": [
-                    "localhost"
+                    "{{base_url}}"
                   ],
-                  "port": "8080",
                   "path": [
                     "usuarios",
                     ":id"
@@ -240,11 +233,10 @@
                 "method": "DELETE",
                 "header": [],
                 "url": {
-                  "raw": "localhost:8080/usuarios/:id",
+                  "raw": "{{base_url}}/usuarios/:id",
                   "host": [
-                    "localhost"
+                    "{{base_url}}"
                   ],
-                  "port": "8080",
                   "path": [
                     "usuarios",
                     ":id"
@@ -281,11 +273,10 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "localhost:8080/usuarios/:id",
+                  "raw": "{{base_url}}/usuarios/:id",
                   "host": [
-                    "localhost"
+                    "{{base_url}}"
                   ],
-                  "port": "8080",
                   "path": [
                     "usuarios",
                     ":id"
@@ -316,11 +307,10 @@
                   }
                 },
                 "url": {
-                  "raw": "localhost:8080/usuarios/:id",
+                  "raw": "{{base_url}}/usuarios/:id",
                   "host": [
-                    "localhost"
+                    "{{base_url}}"
                   ],
-                  "port": "8080",
                   "path": [
                     "usuarios",
                     ":id"
@@ -342,11 +332,10 @@
                 "method": "DELETE",
                 "header": [],
                 "url": {
-                  "raw": "localhost:8080/usuarios/:id",
+                  "raw": "{{base_url}}/usuarios/:id",
                   "host": [
-                    "localhost"
+                    "{{base_url}}"
                   ],
-                  "port": "8080",
                   "path": [
                     "usuarios",
                     ":id"
@@ -402,11 +391,10 @@
                   }
                 },
                 "url": {
-                  "raw": "localhost:8080/usuarios",
+                  "raw": "{{base_url}}/usuarios",
                   "host": [
-                    "localhost"
+                    "{{base_url}}"
                   ],
-                  "port": "8080",
                   "path": [
                     "usuarios"
                   ]
@@ -440,11 +428,10 @@
                   }
                 },
                 "url": {
-                  "raw": "localhost:8080/usuarios",
+                  "raw": "{{base_url}}/usuarios",
                   "host": [
-                    "localhost"
+                    "{{base_url}}"
                   ],
-                  "port": "8080",
                   "path": [
                     "usuarios"
                   ]
@@ -478,11 +465,10 @@
                   }
                 },
                 "url": {
-                  "raw": "localhost:8080/usuarios",
+                  "raw": "{{base_url}}/usuarios",
                   "host": [
-                    "localhost"
+                    "{{base_url}}"
                   ],
-                  "port": "8080",
                   "path": [
                     "usuarios"
                   ]
@@ -507,11 +493,10 @@
                 "method": "DELETE",
                 "header": [],
                 "url": {
-                  "raw": "localhost:8080/usuarios/:id",
+                  "raw": "{{base_url}}/usuarios/:id",
                   "host": [
-                    "localhost"
+                    "{{base_url}}"
                   ],
-                  "port": "8080",
                   "path": [
                     "usuarios",
                     ":id"
@@ -543,11 +528,10 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "localhost:8080/usuarios/:id",
+                  "raw": "{{base_url}}/usuarios/:id",
                   "host": [
-                    "localhost"
+                    "{{base_url}}"
                   ],
-                  "port": "8080",
                   "path": [
                     "usuarios",
                     ":id"
@@ -588,11 +572,10 @@
                   }
                 },
                 "url": {
-                  "raw": "localhost:8080/libros",
+                  "raw": "{{base_url}}/libros",
                   "host": [
-                    "localhost"
+                    "{{base_url}}"
                   ],
-                  "port": "8080",
                   "path": [
                     "libros"
                   ]
@@ -607,11 +590,10 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "localhost:8080/libros",
+                  "raw": "{{base_url}}/libros",
                   "host": [
-                    "localhost"
+                    "{{base_url}}"
                   ],
-                  "port": "8080",
                   "path": [
                     "libros"
                   ]
@@ -626,11 +608,10 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "localhost:8080/libros/:isbn",
+                  "raw": "{{base_url}}/libros/:isbn",
                   "host": [
-                    "localhost"
+                    "{{base_url}}"
                   ],
-                  "port": "8080",
                   "path": [
                     "libros",
                     ":isbn"
@@ -661,11 +642,10 @@
                   }
                 },
                 "url": {
-                  "raw": "localhost:8080/libros/:isbn",
+                  "raw": "{{base_url}}/libros/:isbn",
                   "host": [
-                    "localhost"
+                    "{{base_url}}"
                   ],
-                  "port": "8080",
                   "path": [
                     "libros",
                     ":isbn"
@@ -673,7 +653,7 @@
                   "variable": [
                     {
                       "key": "isbn",
-                      "value": "978-3-16-148410-0"
+                      "value": ""
                     }
                   ]
                 },
@@ -687,11 +667,10 @@
                 "method": "DELETE",
                 "header": [],
                 "url": {
-                  "raw": "localhost:8080/libros/:isbn",
+                  "raw": "{{base_url}}/libros/:isbn",
                   "host": [
-                    "localhost"
+                    "{{base_url}}"
                   ],
-                  "port": "8080",
                   "path": [
                     "libros",
                     ":isbn"
@@ -747,11 +726,10 @@
                   }
                 },
                 "url": {
-                  "raw": "localhost:8080/libros",
+                  "raw": "{{base_url}}/libros",
                   "host": [
-                    "localhost"
+                    "{{base_url}}"
                   ],
-                  "port": "8080",
                   "path": [
                     "libros"
                   ]
@@ -785,11 +763,10 @@
                   }
                 },
                 "url": {
-                  "raw": "localhost:8080/libros",
+                  "raw": "{{base_url}}/libros",
                   "host": [
-                    "localhost"
+                    "{{base_url}}"
                   ],
-                  "port": "8080",
                   "path": [
                     "libros"
                   ]
@@ -814,11 +791,10 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "localhost:8080/libros/:isbn",
+                  "raw": "{{base_url}}/libros/:isbn",
                   "host": [
-                    "localhost"
+                    "{{base_url}}"
                   ],
-                  "port": "8080",
                   "path": [
                     "libros",
                     ":isbn"
@@ -850,11 +826,10 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "localhost:8080/libros/:isbn",
+                  "raw": "{{base_url}}/libros/:isbn",
                   "host": [
-                    "localhost"
+                    "{{base_url}}"
                   ],
-                  "port": "8080",
                   "path": [
                     "libros",
                     ":isbn"
@@ -862,7 +837,7 @@
                   "variable": [
                     {
                       "key": "isbn",
-                      "value": "978-3-16-148410-0"
+                      "value": ""
                     }
                   ]
                 },
@@ -895,11 +870,10 @@
                   }
                 },
                 "url": {
-                  "raw": "localhost:8080/prestamos",
+                  "raw": "{{base_url}}/prestamos",
                   "host": [
-                    "localhost"
+                    "{{base_url}}"
                   ],
-                  "port": "8080",
                   "path": [
                     "prestamos"
                   ]
@@ -914,11 +888,10 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "localhost:8080/prestamos?identificacionUsuario",
+                  "raw": "{{base_url}}/prestamos?identificacionUsuario",
                   "host": [
-                    "localhost"
+                    "{{base_url}}"
                   ],
-                  "port": "8080",
                   "path": [
                     "prestamos"
                   ],
@@ -939,11 +912,10 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "localhost:8080/prestamos/:id",
+                  "raw": "{{base_url}}/prestamos/:id",
                   "host": [
-                    "localhost"
+                    "{{base_url}}"
                   ],
-                  "port": "8080",
                   "path": [
                     "prestamos",
                     ":id"
@@ -980,11 +952,10 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "localhost:8080/prestamos?identificacionUsuario=",
+                  "raw": "{{base_url}}/prestamos?identificacionUsuario=",
                   "host": [
-                    "localhost"
+                    "{{base_url}}"
                   ],
-                  "port": "8080",
                   "path": [
                     "prestamos"
                   ],
@@ -1005,11 +976,10 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "localhost:8080/prestamos/:id",
+                  "raw": "{{base_url}}/prestamos/:id",
                   "host": [
-                    "localhost"
+                    "{{base_url}}"
                   ],
-                  "port": "8080",
                   "path": [
                     "prestamos",
                     ":id"
@@ -1065,11 +1035,10 @@
                   }
                 },
                 "url": {
-                  "raw": "localhost:8080/prestamos",
+                  "raw": "{{base_url}}/prestamos",
                   "host": [
-                    "localhost"
+                    "{{base_url}}"
                   ],
-                  "port": "8080",
                   "path": [
                     "prestamos"
                   ]
@@ -1103,11 +1072,10 @@
                   }
                 },
                 "url": {
-                  "raw": "localhost:8080/prestamos",
+                  "raw": "{{base_url}}/prestamos",
                   "host": [
-                    "localhost"
+                    "{{base_url}}"
                   ],
-                  "port": "8080",
                   "path": [
                     "prestamos"
                   ]
@@ -1141,11 +1109,10 @@
                   }
                 },
                 "url": {
-                  "raw": "localhost:8080/prestamos",
+                  "raw": "{{base_url}}/prestamos",
                   "host": [
-                    "localhost"
+                    "{{base_url}}"
                   ],
-                  "port": "8080",
                   "path": [
                     "prestamos"
                   ]
@@ -1179,11 +1146,10 @@
                   }
                 },
                 "url": {
-                  "raw": "localhost:8080/prestamos",
+                  "raw": "{{base_url}}/prestamos",
                   "host": [
-                    "localhost"
+                    "{{base_url}}"
                   ],
-                  "port": "8080",
                   "path": [
                     "prestamos"
                   ]
@@ -1217,51 +1183,15 @@
                   }
                 },
                 "url": {
-                  "raw": "localhost:8080/prestamos",
+                  "raw": "{{base_url}}/prestamos",
                   "host": [
-                    "localhost"
+                    "{{base_url}}"
                   ],
-                  "port": "8080",
                   "path": [
                     "prestamos"
                   ]
                 },
                 "description": "Caso de prueba de seguridad (RBAC): Un Cliente intenta crear un préstamo.\n\n**Autenticación**  \nRequiere Bearer Token de Cliente (`{{jwt_token_cliente}}`).\n\n**Respuestas**\n\n- **403 Forbidden** → El sistema deniega el acceso."
-              },
-              "response": []
-            },
-            {
-              "name": "Listar - Cliente intenta ver de otro (403)",
-              "request": {
-                "auth": {
-                  "type": "bearer",
-                  "bearer": [
-                    {
-                      "key": "token",
-                      "value": "{{jwt_token_cliente}}",
-                      "type": "string"
-                    }
-                  ]
-                },
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "localhost:8080/prestamos?identificacionUsuario=otra_cedula_123",
-                  "host": [
-                    "localhost"
-                  ],
-                  "port": "8080",
-                  "path": [
-                    "prestamos"
-                  ],
-                  "query": [
-                    {
-                      "key": "identificacionUsuario",
-                      "value": "otra_cedula_123"
-                    }
-                  ]
-                },
-                "description": "Caso de prueba de seguridad (IDOR): Un Cliente intenta usar el filtro para ver los préstamos de otro usuario.\n\n**Autenticación**  \nRequiere Bearer Token de Cliente (`{{jwt_token_cliente}}`).\n\n**Ejemplo de URL maliciosa**  \n`GET /prestamos?identificacionUsuario=otra_cedula_123`\n\n**Respuestas**\n\n- **403 Forbidden** → Bloqueado por la anotación `@PreAuthorize` en el controlador."
               },
               "response": []
             },
@@ -1281,11 +1211,10 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "localhost:8080/prestamos/:id",
+                  "raw": "{{base_url}}/prestamos/:id",
                   "host": [
-                    "localhost"
+                    "{{base_url}}"
                   ],
-                  "port": "8080",
                   "path": [
                     "prestamos",
                     ":id"
@@ -1313,6 +1242,10 @@
     },
     {
       "key": "jwt_token_cliente",
+      "value": ""
+    },
+    {
+      "key": "base_url",
       "value": ""
     }
   ]
