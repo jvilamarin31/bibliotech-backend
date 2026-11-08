@@ -365,7 +365,7 @@ Para la operación diaria (Admin) o para que los clientes consulten sus propios 
 **Criterios de Aceptación**
 - Dado que el bibliotecario consulta el listado sin filtros, entonces el sistema responde con HTTP 200 y todos los préstamos activos.
 - Dado que el bibliotecario usa el filtro `identificacionUsuario`, entonces el sistema filtra los resultados y devuelve los préstamos de ese usuario.
-- Dado que un Cliente consulta el listado sin enviar el filtro, entonces el sistema responde con HTTP 200 y únicamente sus propios préstamos activos.
+- Dado que un Cliente con token válido consulta el listado sin enviar el filtro identificacionUsuario, entonces el sistema responde con HTTP 403 (Forbidden), porque el listado general está reservado al Administrador y el Cliente debe enviar su propia identificación para consultar sus préstamos activos.
 - Dado que un Cliente envía el filtro `identificacionUsuario` con su propia identificación, entonces el sistema responde con HTTP 200 con sus préstamos.
 - Dado que un Cliente intenta usar el filtro `identificacionUsuario` con la identificación de otro usuario, entonces el sistema responde con HTTP 403 (Forbidden).
 - Dado que no hay préstamos activos, entonces el sistema responde con un arreglo vacío.
